@@ -9,4 +9,9 @@ COPY . .
 EXPOSE 10000
 
 # Start the server
-CMD ["java", "-Xmx512M", "-Xms512M", "-jar", "server.jar", "nogui"]
+CMD ["java", \
+     "--add-opens", "java.base/java.nio=ALL-UNNAMED", \
+     "--add-opens", "java.base/sun.nio.ch=ALL-UNNAMED", \
+     "-Xmx350M", "-Xms350M", \
+     "-XX:+UseSerialGC", \
+     "-jar", "server.jar", "nogui"]
