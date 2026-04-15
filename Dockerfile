@@ -1,14 +1,17 @@
-# Use the supported Eclipse Temurin Java 8 image
-FROM eclipse-temurin:8-jre-alpine
+# Use Java 17 (This version can actually download the files)
+FROM eclipse-temurin:17-jre-focal
 
-# Set the working directory
 WORKDIR /app
-
-# Copy all files from your GitHub repo to the container
 COPY . .
 
-# Expose port 10000 for Render
+# Expose the port
 EXPOSE 10000
 
-# Start the server with optimized RAM settings for Render's free tier
-CMD ["java", "-Xmx350M", "-Xms350M", "-XX:+UseSerialGC", "-jar", "server.jar", "nogui"]
+# THE FIX: We add "-Dnetty.packagePrefix=io.netty.util.internal." 
+# and the "add-opens" to force the old networking to work on new Java.
+CMD ["java", \
+     "-Dnetty.packagePrefix=io.netty.util.internal.", \
+     "--add-opens", "java.base/java.nio=ALL-UNNAMED", \
+     "--add-opens", "java.base/sun.nio.ch=ALL-UNNAMED", \
+     "-Xmx350M", "-Xms350M", \
+     "-jar", "server.jar", "nogui"]
