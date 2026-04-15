@@ -1,15 +1,12 @@
-# Use a lightweight Java 17 image (best for performance)
-FROM openjdk:17-slim
+# Use a modern, supported Java 17 image
+FROM eclipse-temurin:17-jre-focal
 
-# Set the folder where our server files will live
 WORKDIR /app
 
-# Copy everything from your GitHub repo into the container
 COPY . .
 
-# Tell Render to use port 10000 for the WebSocket connection
-# (This must match your server.properties port)
+# Expose port 10000 for Render
 EXPOSE 10000
 
-# Start the server with 512MB of RAM (Render Free Tier limit)
+# Start the server
 CMD ["java", "-Xmx512M", "-Xms512M", "-jar", "server.jar", "nogui"]
